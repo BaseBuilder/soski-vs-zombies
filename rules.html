@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Правила - Soski vs Zombies</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Ubuntu:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Специальные стили для страницы правил */
+        .rules-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .rules-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .rules-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 36px;
+            background: linear-gradient(45deg, #ff4757, #ff6b81);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .rules-subtitle {
+            color: #a4b0be;
+            font-size: 18px;
+        }
+        
+        .rules-card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #3742fa;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .rules-card h2 {
+            color: #2ed573;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .rules-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .rules-list li {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid #ff4757;
+            transition: all 0.3s;
+        }
+        
+        .rules-list li:hover {
+            background: rgba(255, 71, 87, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .rule-number {
+            display: inline-block;
+            background: #ff4757;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .punishment {
+            display: block;
+            color: #ffa502;
+            margin-top: 8px;
+            padding-left: 40px;
+            font-style: italic;
+            border-left: 2px solid #ffa502;
+        }
+        
+        .rules-section {
+            margin-bottom: 40px;
+        }
+        
+        .rules-section-title {
+            color: #70a1ff;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #70a1ff;
+        }
+        
+        .warning-box {
+            background: rgba(255, 165, 2, 0.1);
+            border: 2px solid #ffa502;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .warning-box h3 {
+            color: #ffa502;
+            margin-bottom: 10px;
+        }
+        
+        .back-button {
+            display: inline-block;
+            background: #3742fa;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-top: 30px;
+            transition: all 0.3s;
+            border: 2px solid #3742fa;
+        }
+        
+        .back-button:hover {
+            background: transparent;
+            color: #3742fa;
+            transform: translateY(-3px);
+        }
+        
+        .rule-icon {
+            font-size: 20px;
+            margin-right: 10px;
+            color: #ff4757;
+        }
+        
+        .rule-category {
+            background: linear-gradient(45deg, #2ed573, #1e90ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Хедер -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1><span class="red">SOSKI</span> vs <span class="green">ZOMBIES</span></h1>
+                <p class="tagline">CS 1.6 Zombie Survival</p>
+            </div>
+            
+            <nav class="nav">
+                <a href="index.html" class="nav-btn"><i class="fas fa-home"></i> Главная</a>
+                <a href="index.html#server" class="nav-btn"><i class="fas fa-server"></i> Сервер</a>
+                <a href="index.html#connect" class="nav-btn"><i class="fas fa-plug"></i> Подключиться</a>
+                <a href="rules.html" class="nav-btn active"><i class="fas fa-book"></i> Правила</a>
+                <a href="index.html#stats" class="nav-btn"><i class="fas fa-chart-bar"></i> Статистика</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="main">
+        <div class="rules-container">
+            <!-- Заголовок -->
+            <div class="rules-header">
+                <h1 class="rules-title">ПРАВИЛА СЕРВЕРА</h1>
+                <p class="rules-subtitle">CS 1.6 - Soski vs Zombies</p>
+                <div class="server-status" style="justify-content: center; margin: 20px 0;">
+                    <div class="status-indicator online"></div>
+                    <span class="status-text">СЕРВЕР ОНЛАЙН • IP: 46.174.52.22:27213</span>
+                </div>
+            </div>
+            
+            <!-- Общие правила -->
+            <div class="rules-section">
+                <h2 class="rules-section-title">
+                    <i class="fas fa-gavel"></i>
+                    ОБЩИЕ ПРАВИЛА
+                </h2>
+                
+                <div class="rules-card">
+                    <div class="rules-list">
+                        <li>
+                            <span class="rule-number">1</span>
+                            <span class="rule-category">Оскорбления:</span>
+                            На сервере запрещено оскорблять игроков, а также затрагивать любым способом родных.
+                            <span class="punishment">
+                                <i class="fas fa-ban"></i> Наказание: мут от 5-60 минут / кик / бан навсегда
+                            </span>
+                        </li>
+                        
+                        <li>
+                            <span class="rule-number">2</span>
+                            <span class="rule-category">Реклама:</span>
+                            Строго запрещена любая реклама других серверов, товаров или услуг.
+                            <span class="punishment">
+                                <i class="fas fa-ban"></i> Наказание: бан навсегда
+                            </span>
+                        </li>
+                        
+                        <li>
+                            <span class="rule-number">3</span>
+                            <span class="rule-category">Лазерные мины:</span>
+                            Запрещено ставить лазерные мины так, чтобы они смотрели на спавн (исключение - если мины установлены в нычке людей), а также в места, где зомби не смогут их уничтожить.
+                            <span class="punishment">
+                                <i class="fas fa-ban"></i> Наказание: предупреждение / кик / бан до 30 минут
+                            </span>
+                        </li>
+                        
+                        <li>
+                            <span class="rule-number">4</span>
+                            <span class="rule-category">Микрофон:</span>
+                            Возрастное ограничение для использования микрофона - 12+.
+                            <span class="punishment">
+                                <i class="fas fa-ban"></i> Наказание: мут от 60 минут и выше
+                            </span>
+                        </li>
+                        
+                        <li>
+                            <span class="rule-number">5</span>
+                            <span class="rule-category">Качество звука:</span>
+                            Запрещено использовать микрофон с плохим звуком, без звука, а также спамить голосовые сообщения, музыку или другие мешающие игре звуки.
+                            <span class="punishment">
+                                <i class="fas fa-ban"></i> Наказание: мут / бан до 60 минут
+                            </span>
+                        </li>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Правила предметов -->
+            <div class="rules-section">
+                <h2 class="rules-section-title">
+                    <i class="fas fa-bomb"></i>
+                    ПРАВИЛА ПРЕДМЕТОВ
+                </h2>
+                
+                <div class="warning-box">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Внимание!</h3>
+                    <p>Правила для антидота, тортика и гранаты вирус применяются строго!</p>
+                </div>
+                
+                <div class="rules-card">
+                    <h2><i class="fas fa-syringe"></i> Антидот / Тортик / Граната вирус</h2>
+                    
+                    <div class="rules-list">
+                        <li>
+                            <span class="rule-number">1</span>
+                            <span class="rule-category">Антидот:</span>
+                            Запрещено использовать антидот более 1 раза за раунд.
+                            <span class="punishment">
+                                <i class="fas fa-ban"></i> Наказание: кик / бан на 5-60 минут
+                            </span>
+                        </li>
+                        
+                        <li>
+                            <span class="rule-number">2</span>
+                            <span class="rule-category">Тортик:</span>
+                            Запрещено использовать тортик более 1 раза за карту.
+                            <span class="punishment">
+                                <i class="fas fa-ban"></i> Наказание: кик / бан 5-60 минут
+                            </span>
+                        </li>
+                        
+                        <li>
+                            <span class="rule-number">3</span>
+                            <span class="rule-category">Граната вирус:</span>
+                            Запрещено использовать гранату вирус более 1 штуки за раунд.
+                            <span class="punishment">
+                                <i class="fas fa-ban"></i> Наказание: кик / бан 5-60 минут
+                            </span>
+                        </li>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Правила для донатеров -->
+            <div class="rules-section">
+                <h2 class="rules-section-title">
+                    <i class="fas fa-crown"></i>
+                    ПРАВИЛА ДЛЯ ДОНАТЕРОВ
+                </h2>
+                
+                <div class="warning-box">
+                    <h3><i class="fas fa-star"></i> Привилегированные игроки</h3>
+                    <p>Игроки с донатом несут повышенную ответственность за свои действия!</p>
+                </div>
+                
+                <div class="rules-card">
+                    <h2><i class="fas fa-shield-alt"></i> Игроки с привилегией</h2>
+                    
+                    <div class="rules-list">
+                        <li>
+                            <span class="rule-number">1</span>
+                            <span class="rule-category">Злоупотребление правами:</span>
+                            Строго запрещено выдавать наказания просто так без объективной причины.
+                            <span class="punishment">
+                                <i class="fas fa-ban"></i> Наказание: бан 5-120 минут / снятие привилегии
+                            </span>
+                        </li>
+                        
+                        <li>
+                            <span class="rule-number">2</span>
+                            <span class="rule-category">Ограничение брони:</span>
+                            Запрещено иметь более 1000 брони независимо от привилегии.
+                            <span class="punishment">
+                                <i class="fas fa-ban"></i> Наказание: бан 60 минут (при повторном нарушении наказание удваивается)
+                            </span>
+                        </li>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Важное примечание -->
+            <div class="rules-card" style="border-color: #ffa502; background: rgba(255, 165, 2, 0.05);">
+                <h2 style="color: #ffa502;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    ВАЖНОЕ ПРИМЕЧАНИЕ
+                </h2>
+                <div style="color: #a4b0be; line-height: 1.6;">
+                    <p>Администрация сервера оставляет за собой право:</p>
+                    <ul style="padding-left: 20px; margin: 15px 0;">
+                        <li>Трактовки правил по своему усмотрению</li>
+                        <li>Изменения наказания в зависимости от ситуации</li>
+                        <li>Внесения изменений в правила без предварительного уведомления</li>
+                    </ul>
+                    <p>Игнорирование правил считается согласием с наказанием. При повторных нарушениях срок наказания увеличивается.</p>
+                </div>
+            </div>
+            
+            <!-- Кнопка назад -->
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="index.html" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Вернуться на главную
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>SOSKI vs ZOMBIES</h3>
+                    <p>© 2024 CS 1.6 Zombie Server</p>
+                </div>
+                
+                <div class="footer-links">
+                    <a href="#"><i class="fab fa-discord"></i> Discord</a>
+                    <a href="#"><i class="fab fa-telegram"></i> Telegram</a>
+                    <a href="#"><i class="fab fa-vk"></i> VK</a>
+                </div>
+                
+                <div class="footer-info">
+                    <p><i class="fas fa-server"></i> Версия сервера: 1.6</p>
+                    <p><i class="fas fa-code"></i> Dev: Soski Team</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Базовые функции
+        document.addEventListener('DOMContentLoaded', () => {
+            // Анимация кнопок
+            document.querySelectorAll('.nav-btn, .back-button').forEach(btn => {
+                btn.addEventListener('mouseenter', () => {
+                    btn.style.transform = 'translateY(-2px)';
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // Плавная прокрутка
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#' || href.startsWith('#')) {
+                        e.preventDefault();
+                        const targetElement = document.querySelector(href);
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // Подсветка активной кнопки
+            const currentPage = window.location.pathname;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.getAttribute('href') === currentPage || 
+                    (currentPage.includes('rules') && btn.getAttribute('href') === 'rules.html')) {
+                    btn.classList.add('active');
+                }
+            });
+        });
+        
+        // Функция копирования IP
+        function copyIP() {
+            const ip = "46.174.52.22:27213";
+            navigator.clipboard.writeText(ip)
+                .then(() => {
+                    alert("IP скопирован: " + ip);
+                })
+                .catch(err => {
+                    console.error('Ошибка копирования:', err);
+                });
+        }
+    </script>
+</body>
+</html>
