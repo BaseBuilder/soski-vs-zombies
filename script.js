@@ -1,122 +1,172 @@
-// Soski vs Zombies - Realistic Player Counter
+// Soski vs Zombies - Real Player List from Server
 
-// Реалистичные данные онлайна для CS 1.6 сервера
-const realisticOnlinePatterns = {
-    // Паттерны по времени суток (UTC+3 - Москва)
-    patterns: [
-        // Ночь (0-6 утра): 0-8 игроков
-        { hour: 0, typical: [0, 2, 5, 8], max: 12 },
-        { hour: 1, typical: [0, 1, 3, 6], max: 10 },
-        { hour: 2, typical: [0, 1, 2, 4], max: 8 },
-        { hour: 3, typical: [0, 1, 2, 3], max: 6 },
-        { hour: 4, typical: [0, 1, 2, 3], max: 5 },
-        { hour: 5, typical: [0, 1, 2, 3], max: 5 },
-        { hour: 6, typical: [0, 1, 3, 5], max: 7 },
+// Конфигурация сервера
+const SERVER_IP = "46.174.52.22";
+const SERVER_PORT = "27213";
+const SERVER_ADDRESS = `${SERVER_IP}:${SERVER_PORT}`;
+
+// Получение информации о сервере через A2S Query
+async function getServerInfo() {
+    try {
+        // Используем прокси для обхода CORS
+        const response = await fetch(`https://api.gametracker.rs/demo/json/server_info/${SERVER_IP}:${SERVER_PORT}`);
         
-        // Утро (7-11): 1-15 игроков
-        { hour: 7, typical: [1, 3, 6, 10], max: 14 },
-        { hour: 8, typical: [2, 5, 8, 12], max: 16 },
-        { hour: 9, typical: [3, 7, 11, 15], max: 18 },
-        { hour: 10, typical: [4, 8, 13, 17], max: 20 },
-        { hour: 11, typical: [5, 10, 15, 20], max: 22 },
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         
-        // День (12-17): 8-25 игроков
-        { hour: 12, typical: [8, 12, 16, 20], max: 24 },
-        { hour: 13, typical: [10, 14, 18, 22], max: 26 },
-        { hour: 14, typical: [12, 16, 20, 24], max: 28 },
-        { hour: 15, typical: [14, 18, 22, 26], max: 30 },
-        { hour: 16, typical: [16, 20, 24, 28], max: 32 },
-        { hour: 17, typical: [18, 22, 26, 30], max: 32 },
-        
-        // Вечер (18-23): 15-32 игроков
-        { hour: 18, typical: [20, 24, 28, 32], max: 32 },
-        { hour: 19, typical: [22, 26, 30, 32], max: 32 },
-        { hour: 20, typical: [24, 28, 32, 32], max: 32 },
-        { hour: 21, typical: [22, 26, 30, 32], max: 32 },
-        { hour: 22, typical: [18, 22, 26, 30], max: 32 },
-        { hour: 23, typical: [12, 16, 20, 25], max: 28 }
-    ],
-    
-    // Выходные = больше игроков
-    dayModifiers: {
-        0: 1.2, // Воскресенье +20%
-        1: 0.8, // Понедельник -20%
-        2: 0.9, // Вторник -10%
-        3: 1.0, // Среда 0%
-        4: 1.1, // Четверг +10%
-        5: 1.3, // Пятница +30%
-        6: 1.4  // Суббота +40%
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching server info:', error);
+        return null;
     }
-};
-
-// Получаем реалистичное количество игроков
-function getRealisticPlayerCount() {
-    const now = new Date();
-    const moscowTime = new Date(now.getTime() + 3 * 60 * 60 * 1000); // UTC+3
-    const hour = moscowTime.getHours();
-    const day = moscowTime.getDay();
-    
-    // Находим паттерн для текущего часа
-    const pattern = realisticOnlinePatterns.patterns.find(p => p.hour === hour) || 
-                   realisticOnlinePatterns.patterns[0];
-    
-    // Выбираем случайное типичное значение
-    const randomIndex = Math.floor(Math.random() * pattern.typical.length);
-    let players = pattern.typical[randomIndex];
-    
-    // Применяем модификатор дня недели
-    const modifier = realisticOnlinePatterns.dayModifiers[day] || 1.0;
-    players = Math.round(players * modifier);
-    
-    // Гарантируем границы 0-32
-    players = Math.max(0, Math.min(32, players));
-    
-    // Добавляем небольшой случайный шум (±2)
-    players += Math.floor(Math.random() * 5) - 2;
-    players = Math.max(0, Math.min(32, players));
-    
-    return players;
 }
 
-// Плавное изменение счетчика
-function updatePlayerCount() {
-    const playerElement = document.getElementById('players');
-    const targetPlayers = getRealisticPlayerCount();
-    const currentText = playerElement.textContent;
-    const currentPlayers = parseInt(currentText.split('/')[0]) || 0;
-    
-    // Плавная анимация изменения
-    const steps = 10;
-    const step = (targetPlayers - currentPlayers) / steps;
-    let stepCount = 0;
-    
-    const interval = setInterval(() => {
-        stepCount++;
-        const newValue = Math.round(currentPlayers + (step * stepCount));
-        const displayValue = Math.max(0, Math.min(32, newValue));
+// Получение списка игроков
+async function getPlayerList() {
+    try {
+        // Альтернативный API
+        const response = await fetch(`https://cache.gametracker.rs/server_info/${SERVER_IP}:${SERVER_PORT}/players.json`);
         
-        // Цвет в зависимости от заполненности
-        let colorClass = 'green';
-        if (displayValue < 10) colorClass = 'red';
-        else if (displayValue < 20) colorClass = 'yellow';
-        
-        playerElement.innerHTML = `<span class="${colorClass}">${displayValue}</span>/32`;
-        
-        if (stepCount >= steps) {
-            clearInterval(interval);
-            // Корректируем финальное значение
-            playerElement.innerHTML = `<span class="${colorClass}">${targetPlayers}</span>/32`;
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-    }, 50);
+        
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching player list:', error);
+        return null;
+    }
+}
+
+// Обновление информации о сервере
+async function updateServerStatus() {
+    const playersElement = document.getElementById('players');
+    const playerListElement = document.querySelector('.players-list');
+    
+    try {
+        // Получаем общую информацию
+        const serverInfo = await getServerInfo();
+        
+        if (serverInfo && serverInfo.online === "1") {
+            const currentPlayers = serverInfo.players || "0";
+            const maxPlayers = serverInfo.maxplayers || "32";
+            
+            // Обновляем счетчик
+            playersElement.innerHTML = `<span class="green">${currentPlayers}</span>/${maxPlayers}`;
+            
+            // Получаем список игроков
+            const playerList = await getPlayerList();
+            
+            if (playerList && playerList.players && playerList.players.length > 0) {
+                // Сортируем игроков по имени
+                const sortedPlayers = playerList.players.sort((a, b) => {
+                    if (a.name && b.name) {
+                        return a.name.localeCompare(b.name);
+                    }
+                    return 0;
+                });
+                
+                // Отображаем список игроков
+                playerListElement.innerHTML = `
+                    <div class="players-header">
+                        <span>Игрок</span>
+                        <span>Фраги</span>
+                        <span>Время</span>
+                    </div>
+                    ${sortedPlayers.map(player => `
+                        <div class="player-row">
+                            <span class="player-name">
+                                <i class="fas fa-user"></i>
+                                ${escapeHtml(player.name || 'Unknown')}
+                            </span>
+                            <span class="player-score">${player.score || '0'}</span>
+                            <span class="player-time">${formatTime(player.time || '0')}</span>
+                        </div>
+                    `).join('')}
+                `;
+            } else {
+                playerListElement.innerHTML = `
+                    <div class="no-players">
+                        <i class="fas fa-users-slash"></i>
+                        <p>На сервере нет игроков</p>
+                    </div>
+                `;
+            }
+            
+            // Обновляем статус сервера
+            updateServerStatusUI(true);
+            
+        } else {
+            // Сервер оффлайн
+            playersElement.innerHTML = `<span class="red">0</span>/32`;
+            playerListElement.innerHTML = `
+                <div class="server-offline">
+                    <i class="fas fa-server"></i>
+                    <h3>Сервер оффлайн</h3>
+                    <p>Попробуйте подключиться позже</p>
+                </div>
+            `;
+            updateServerStatusUI(false);
+        }
+        
+    } catch (error) {
+        console.error('Error updating server status:', error);
+        
+        // Заглушка при ошибке
+        playersElement.innerHTML = `<span class="yellow">?</span>/32`;
+        playerListElement.innerHTML = `
+            <div class="server-error">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>Не удалось получить данные сервера</p>
+            </div>
+        `;
+    }
+}
+
+// Обновление UI статуса сервера
+function updateServerStatusUI(isOnline) {
+    const statusIndicator = document.querySelector('.status-indicator');
+    const statusText = document.querySelector('.status-text');
+    
+    if (statusIndicator && statusText) {
+        if (isOnline) {
+            statusIndicator.className = 'status-indicator online';
+            statusIndicator.style.background = '#2ed573';
+            statusText.innerHTML = `ОНЛАЙН • ИГРОКОВ: <span id="players"></span>`;
+        } else {
+            statusIndicator.className = 'status-indicator offline';
+            statusIndicator.style.background = '#ff4757';
+            statusText.innerHTML = `ОФФЛАЙН • ИГРОКОВ: <span id="players"></span>`;
+        }
+    }
+}
+
+// Вспомогательные функции
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    
+    if (hours > 0) {
+        return `${hours}ч ${minutes}м`;
+    } else {
+        return `${minutes}м`;
+    }
 }
 
 // Основные функции сайта
 function copyIP() {
-    const ip = "46.174.52.22:27213";
-    navigator.clipboard.writeText(ip)
+    navigator.clipboard.writeText(SERVER_ADDRESS)
         .then(() => {
-            // Красивое уведомление вместо alert
-            showNotification(`IP скопирован: ${ip}`);
+            showNotification(`IP скопирован: ${SERVER_ADDRESS}`);
         })
         .catch(err => {
             showNotification('Ошибка копирования', 'error');
@@ -125,21 +175,17 @@ function copyIP() {
 
 function connectCS() {
     if (confirm("Подключиться к серверу Soski vs Zombies?")) {
-        // Пытаемся открыть через Steam
-        window.location.href = "steam://connect/46.174.52.22:27213";
+        window.location.href = `steam://connect/${SERVER_ADDRESS}`;
         
-        // Резервный вариант
         setTimeout(() => {
-            const copyText = "connect 46.174.52.22:27213";
-            navigator.clipboard.writeText(copyText);
-            showNotification("Команда подключения скопирована в буфер. Вставьте в консоль CS 1.6");
+            navigator.clipboard.writeText(`connect ${SERVER_ADDRESS}`);
+            showNotification("Команда подключения скопирована в буфер");
         }, 1000);
     }
 }
 
-// Красивые уведомления
+// Уведомления
 function showNotification(message, type = 'success') {
-    // Создаем элемент уведомления
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.innerHTML = `
@@ -147,7 +193,6 @@ function showNotification(message, type = 'success') {
         <span>${message}</span>
     `;
     
-    // Стили для уведомления
     notification.style.cssText = `
         position: fixed;
         top: 20px;
@@ -165,83 +210,136 @@ function showNotification(message, type = 'success') {
     
     document.body.appendChild(notification);
     
-    // Удаляем через 3 секунды
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease-out';
         setTimeout(() => notification.remove(), 300);
     }, 3000);
 }
 
-// Добавляем стили для анимаций
-function addNotificationStyles() {
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-        .green { color: #2ed573 !important; }
-        .red { color: #ff4757 !important; }
-        .yellow { color: #ffa502 !important; }
-    `;
-    document.head.appendChild(style);
-}
-
-// Инициализация при загрузке
+// Инициализация
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Soski vs Zombies website loaded!");
+    console.log("Soski vs Zombies website initialized");
     
-    // Добавляем стили для уведомлений
-    addNotificationStyles();
+    // Первое обновление
+    updateServerStatus();
     
-    // Инициализируем счетчик
-    updatePlayerCount();
+    // Обновляем каждые 30 секунд
+    setInterval(updateServerStatus, 30000);
     
-    // Обновляем каждые 2 минуты (реалистично)
-    setInterval(updatePlayerCount, 120000);
+    // Добавляем кнопку обновления вручную
+    const refreshBtn = document.createElement('button');
+    refreshBtn.className = 'btn-refresh';
+    refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Обновить';
+    refreshBtn.onclick = updateServerStatus;
     
-    // Плавная прокрутка
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 80,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
+    const playersSection = document.querySelector('.players-section');
+    if (playersSection) {
+        const h2 = playersSection.querySelector('h2');
+        if (h2) {
+            refreshBtn.style.cssText = `
+                margin-left: 15px;
+                background: #3742fa;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 14px;
+            `;
+            h2.appendChild(refreshBtn);
+        }
+    }
     
     // Анимация кнопок
-    const buttons = document.querySelectorAll('.btn-copy, .btn-connect, .nav-btn');
-    buttons.forEach(btn => {
+    document.querySelectorAll('.btn-copy, .btn-connect, .nav-btn').forEach(btn => {
         btn.addEventListener('mouseenter', () => {
-            btn.style.transform = 'translateY(-2px) scale(1.05)';
+            btn.style.transform = 'translateY(-2px)';
         });
         btn.addEventListener('mouseleave', () => {
-            btn.style.transform = 'translateY(0) scale(1)';
+            btn.style.transform = 'translateY(0)';
         });
     });
 });
 
-// Функция для отображения времени сервера
-function updateServerTime() {
-    const timeElement = document.getElementById('server-time');
-    if (timeElement) {
-        const now = new Date();
-        const moscowTime = new Date(now.getTime() + 3 * 60 * 60 * 1000);
-        timeElement.textContent = moscowTime.toLocaleTimeString('ru-RU');
+// Добавляем стили для списка игроков
+const playerStyles = `
+    .players-list {
+        max-width: 800px;
+        margin: 0 auto;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 20px;
+        border-radius: 15px;
+        border: 2px solid #2ed573;
     }
-}
+    
+    .players-header {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        padding: 10px;
+        background: rgba(46, 213, 115, 0.1);
+        border-radius: 8px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #2ed573;
+    }
+    
+    .player-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        padding: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        align-items: center;
+    }
+    
+    .player-row:last-child {
+        border-bottom: none;
+    }
+    
+    .player-row:hover {
+        background: rgba(46, 213, 115, 0.05);
+    }
+    
+    .player-name {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #ffffff;
+    }
+    
+    .player-score {
+        color: #ffa502;
+        text-align: center;
+    }
+    
+    .player-time {
+        color: #70a1ff;
+        text-align: center;
+    }
+    
+    .no-players, .server-offline, .server-error {
+        text-align: center;
+        padding: 40px;
+        color: #a4b0be;
+    }
+    
+    .no-players i, .server-offline i, .server-error i {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: #747d8c;
+    }
+    
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+`;
 
-// Обновляем время каждую секунду
-setInterval(updateServerTime, 1000);
+// Добавляем стили в документ
+const styleSheet = document.createElement('style');
+styleSheet.textContent = playerStyles;
+document.head.appendChild(styleSheet);
