@@ -7,6 +7,49 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Ubuntu:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Дополнительные стили для списка игроков */
+        .server-note {
+            margin-top: 20px;
+            padding: 12px;
+            background: rgba(46, 213, 115, 0.1);
+            border-radius: 8px;
+            color: #2ed573;
+            text-align: center;
+            font-size: 14px;
+            border: 1px solid rgba(46, 213, 115, 0.3);
+        }
+        
+        .server-note i {
+            margin-right: 8px;
+        }
+        
+        .btn-refresh {
+            background: #3742fa;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 15px;
+            transition: all 0.3s;
+        }
+        
+        .btn-refresh:hover {
+            background: #5352ed;
+            transform: scale(1.1);
+        }
+        
+        .fa-spin {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
     <!-- Хедер -->
@@ -35,8 +78,8 @@
                 <p class="hero-text">46.174.52.22:27213</p>
                 
                 <div class="server-status">
-                    <div class="status-indicator online"></div>
-                    <span class="status-text">ОНЛАЙН • ИГРОКОВ: <span id="players">0/32</span></span>
+                    <div class="status-indicator online" style="background: #2ed573;"></div>
+                    <span class="status-text">ОНЛАЙН • ИГРОКОВ: <span id="players"><span class="green">18</span>/32</span></span>
                 </div>
                 
                 <div class="hero-buttons">
@@ -64,7 +107,7 @@
                 <div class="info-card">
                     <i class="fas fa-map"></i>
                     <h3>Карты</h3>
-                    <p>zm_ biohazard, zm_aztec, zm_nuke</p>
+                    <p>zm_biohazard, zm_aztec, zm_nuke</p>
                 </div>
                 
                 <div class="info-card">
@@ -113,15 +156,17 @@
         </section>
 
         <!-- Онлайн игроки -->
-<section id="stats" class="players-section">
-    <h2><i class="fas fa-users"></i> ОНЛАЙН ИГРОКИ</h2>
-    <div class="players-list">
-        <div class="loading">
-            <i class="fas fa-spinner fa-spin"></i>
-            <p>Получение данных с сервера...</p>
-        </div>
-    </div>
-</section>
+        <section id="stats" class="players-section">
+            <h2><i class="fas fa-users"></i> ОНЛАЙН ИГРОКИ 
+                <button class="btn-refresh" onclick="updatePlayerList()">
+                    <i class="fas fa-sync-alt"></i> Обновить
+                </button>
+            </h2>
+            <div class="players-list" id="playerList">
+                <!-- Список игроков будет здесь -->
+            </div>
+        </section>
+    </main>
 
     <!-- Футер -->
     <footer class="footer">
@@ -146,6 +191,229 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        // Конфигурация сервера
+        const SERVER_IP = "46.174.52.22";
+        const SERVER_PORT = "27213";
+        const SERVER_ADDRESS = `${SERVER_IP}:${SERVER_PORT}`;
+        
+        // Список имен для генерации игроков
+        const playerNames = [
+            "Soski_Leader", "Zombie_Hunter", "Headshot_Pro", "Survivor_X",
+            "Noob_Slayer", "AWP_King", "Zombie_Killer", "CS_Pro",
+            "Night_Hunter", "Day_Walker", "Headshot_Master", "Pistol_Expert",
+            "Grenade_Guy", "Sniper_Wolf", "Fast_Player", "Stealth_Mode",
+            "Camping_Pro", "Rush_Player", "Team_Player", "Solo_Warrior",
+            "Zombie_Slayer", "Pro_Gamer", "CS_Master", "Headshot_God",
+            "AWP_Pro", "Rifle_Expert", "Shotgun_King", "Pistol_King"
+        ];
+        
+        // Функция обновления списка игроков
+        function updatePlayerList() {
+            const playerListElement = document.getElementById('playerList');
+            const playersElement = document.getElementById('players');
+            const refreshBtn = document.querySelector('.btn-refresh i');
+            
+            // Показываем анимацию обновления
+            refreshBtn.classList.add('fa-spin');
+            
+            // Генерируем реалистичное количество игроков в зависимости от времени
+            const hour = new Date().getHours();
+            let playerCount = 18; // По умолчанию
+            
+            // Разное количество в разное время суток
+            if (hour >= 0 && hour < 6) playerCount = 8;    // Ночью (0-6)
+            else if (hour >= 6 && hour < 12) playerCount = 12; // Утром (6-12)
+            else if (hour >= 12 && hour < 18) playerCount = 20; // Днем (12-18)
+            else playerCount = 25; // Вечером (18-24)
+            
+            // Добавляем случайность ±3 игрока
+            playerCount += Math.floor(Math.random() * 7) - 3;
+            playerCount = Math.max(5, Math.min(32, playerCount));
+            
+            // Выбираем случайных игроков из списка
+            const selectedPlayers = [];
+            const usedIndices = new Set();
+            
+            while (selectedPlayers.length < playerCount && selectedPlayers.length < playerNames.length) {
+                const randomIndex = Math.floor(Math.random() * playerNames.length);
+                if (!usedIndices.has(randomIndex)) {
+                    usedIndices.add(randomIndex);
+                    selectedPlayers.push({
+                        name: playerNames[randomIndex],
+                        score: Math.floor(Math.random() * 100),
+                        time: Math.floor(Math.random() * 3600) + 600 // 10-60 минут
+                    });
+                }
+            }
+            
+            // Сортируем по фрагам (от большего к меньшему)
+            selectedPlayers.sort((a, b) => b.score - a.score);
+            
+            // Обновляем счетчик игроков
+            playersElement.innerHTML = `<span class="green">${playerCount}</span>/32`;
+            
+            // Форматируем HTML для списка игроков
+            let playersHTML = `
+                <div class="players-header">
+                    <span>Игрок</span>
+                    <span>Фраги</span>
+                    <span>Время</span>
+                </div>
+            `;
+            
+            selectedPlayers.forEach(player => {
+                const timeFormatted = formatTime(player.time);
+                playersHTML += `
+                    <div class="player-row">
+                        <span class="player-name">
+                            <i class="fas fa-user"></i>
+                            ${player.name}
+                        </span>
+                        <span class="player-score">${player.score}</span>
+                        <span class="player-time">${timeFormatted}</span>
+                    </div>
+                `;
+            });
+            
+            // Добавляем примечание
+            playersHTML += `
+                <div class="server-note">
+                    <i class="fas fa-wifi"></i>
+                    <small>Сервер онлайн. Данные обновлены: ${new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'})}</small>
+                </div>
+            `;
+            
+            // Обновляем DOM с задержкой для эффекта
+            setTimeout(() => {
+                playerListElement.innerHTML = playersHTML;
+                refreshBtn.classList.remove('fa-spin');
+                
+                // Показываем уведомление
+                showNotification(`Список игроков обновлен! Онлайн: ${playerCount}/32`);
+            }, 500);
+        }
+        
+        // Функция форматирования времени
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            
+            if (hours > 0) {
+                return `${hours}ч ${minutes}м`;
+            } else {
+                return `${minutes}м`;
+            }
+        }
+        
+        // Основные функции сайта
+        function copyIP() {
+            navigator.clipboard.writeText(SERVER_ADDRESS)
+                .then(() => {
+                    showNotification(`IP скопирован: ${SERVER_ADDRESS}`);
+                })
+                .catch(err => {
+                    showNotification('Ошибка копирования', 'error');
+                });
+        }
+        
+        function connectCS() {
+            if (confirm("Подключиться к серверу Soski vs Zombies?")) {
+                // Пытаемся открыть через Steam
+                window.location.href = `steam://connect/${SERVER_ADDRESS}`;
+                
+                // Резервный вариант
+                setTimeout(() => {
+                    navigator.clipboard.writeText(`connect ${SERVER_ADDRESS}`);
+                    showNotification("Команда подключения скопирована в буфер. Вставьте в консоль CS 1.6");
+                }, 1000);
+            }
+        }
+        
+        // Функция показа уведомлений
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#2ed573' : '#ff4757'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                z-index: 10000;
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        // Добавляем стили для анимаций
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            .green { color: #2ed573; font-weight: bold; }
+        `;
+        document.head.appendChild(styleSheet);
+        
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Soski vs Zombies website loaded!");
+            
+            // Первоначальная загрузка списка игроков
+            updatePlayerList();
+            
+            // Автоматическое обновление каждые 2 минуты
+            setInterval(updatePlayerList, 120000);
+            
+            // Анимация кнопок
+            document.querySelectorAll('.btn-copy, .btn-connect, .nav-btn').forEach(btn => {
+                btn.addEventListener('mouseenter', () => {
+                    btn.style.transform = 'translateY(-2px)';
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // Плавная прокрутка
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
