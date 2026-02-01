@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soski vs Zombies - CS 1.6 Zombie Server</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Ubuntu:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Хедер -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1><span class="red">SOSKI</span> vs <span class="green">ZOMBIES</span></h1>
+                <p class="tagline">CS 1.6 Zombie Survival</p>
+            </div>
+            
+            <nav class="nav">
+                <a href="#server" class="nav-btn"><i class="fas fa-server"></i> Сервер</a>
+                <a href="#connect" class="nav-btn"><i class="fas fa-plug"></i> Подключиться</a>
+                <a href="#rules" class="nav-btn"><i class="fas fa-book"></i> Правила</a>
+                <a href="#stats" class="nav-btn"><i class="fas fa-chart-bar"></i> Статистика</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="main">
+        <section class="hero">
+            <div class="hero-content">
+                <h2 class="animate-pop">ЕДИНСТВЕННЫЙ И ЛУЧШИЙ</h2>
+                <h1 class="title-large">ZOMBIE SERVER</h1>
+                <p class="hero-text">46.174.52.22:27213</p>
+                
+                <div class="server-status">
+                    <div class="status-indicator online"></div>
+                    <span class="status-text">ОНЛАЙН • ИГРОКОВ: <span id="players">0/32</span></span>
+                </div>
+                
+                <div class="hero-buttons">
+                    <button onclick="copyIP()" class="btn-copy">
+                        <i class="fas fa-copy"></i> Скопировать IP
+                    </button>
+                    <button onclick="connectCS()" class="btn-connect">
+                        <i class="fas fa-play"></i> Подключиться в CS
+                    </button>
+                </div>
+            </div>
+            
+            <div class="hero-image">
+                <div class="zombie-char">🧟</div>
+                <div class="vs-text">VS</div>
+                <div class="soski-char">🔫</div>
+            </div>
+        </section>
+
+        <!-- Информация о сервере -->
+        <section id="server" class="info-section">
+            <h2><i class="fas fa-info-circle"></i> ИНФОРМАЦИЯ О СЕРВЕРЕ</h2>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <i class="fas fa-map"></i>
+                    <h3>Карты</h3>
+                    <p>zm_ biohazard, zm_aztec, zm_nuke</p>
+                </div>
+                
+                <div class="info-card">
+                    <i class="fas fa-cogs"></i>
+                    <h3>Моды</h3>
+                    <p>Zombie Plague 5.0, VIP-система</p>
+                </div>
+                
+                <div class="info-card">
+                    <i class="fas fa-gift"></i>
+                    <h3>Награды</h3>
+                    <p>Ежедневные бонусы</p>
+                </div>
+                
+                <div class="info-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Античит</h3>
+                    <p>Reunion + собственные защиты</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Блок подключения -->
+        <section id="connect" class="connect-section">
+            <h2><i class="fas fa-wifi"></i> ПОДКЛЮЧЕНИЕ</h2>
+            
+            <div class="connect-box">
+                <div class="ip-display">
+                    <code>46.174.52.22:27213</code>
+                    <button onclick="copyIP()" class="btn-small">
+                        <i class="fas fa-copy"></i> Копировать
+                    </button>
+                </div>
+                
+                <p class="help-text">
+                    <i class="fas fa-terminal"></i> В консоли CS: <code>connect 46.174.52.22:27213</code>
+                </p>
+                
+                <div class="quick-connect">
+                    <h3>Быстрое подключение:</h3>
+                    <a href="steam://connect/46.174.52.22:27213" class="steam-btn">
+                        <i class="fab fa-steam"></i> Через Steam
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Онлайн игроки (заглушка) -->
+        <section id="stats" class="players-section">
+            <h2><i class="fas fa-users"></i> ОНЛАЙН ИГРОКИ</h2>
+            <div class="players-list">
+                <p><i class="fas fa-sync fa-spin"></i> Загрузка списка игроков...</p>
+                <!-- Здесь будет список игроков -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>SOSKI vs ZOMBIES</h3>
+                    <p>© 2024 CS 1.6 Zombie Server</p>
+                </div>
+                
+                <div class="footer-links">
+                    <a href="#"><i class="fab fa-discord"></i> Discord</a>
+                    <a href="#"><i class="fab fa-telegram"></i> Telegram</a>
+                    <a href="#"><i class="fab fa-vk"></i> VK</a>
+                </div>
+                
+                <div class="footer-info">
+                    <p><i class="fas fa-server"></i> Версия сервера: 1.6</p>
+                    <p><i class="fas fa-code"></i> Dev: Soski Team</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
