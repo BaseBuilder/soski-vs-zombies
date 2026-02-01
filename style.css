@@ -459,3 +459,45 @@ body {
 .status-indicator.online {
     animation: pulse-online 2s infinite;
 }
+
+/* Стили для загрузки */
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #70a1ff;
+}
+
+.loading i {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+/* Кнопка обновления */
+.btn-refresh {
+    background: #3742fa !important;
+    color: white !important;
+    border: none !important;
+    padding: 8px 15px !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    font-size: 14px !important;
+    margin-left: 15px !important;
+    transition: all 0.3s !important;
+}
+
+.btn-refresh:hover {
+    background: #5352ed !important;
+    transform: rotate(180deg) !important;
+}
+
+/* Адаптивность списка игроков */
+@media (max-width: 600px) {
+    .players-header,
+    .player-row {
+        grid-template-columns: 2fr 1fr;
+    }
+    
+    .player-time {
+        display: none;
+    }
+}
