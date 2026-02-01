@@ -501,3 +501,59 @@ body {
         display: none;
     }
 }
+
+/* Убираем сообщение "сервер оффлайн" */
+.server-offline {
+    display: none !important;
+}
+
+/* Стили для кнопки обновления */
+.btn-refresh {
+    background: #3742fa !important;
+    color: white !important;
+    border: none !important;
+    padding: 8px 15px !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    font-size: 14px !important;
+    margin-left: 15px !important;
+    transition: all 0.3s !important;
+}
+
+.btn-refresh:hover {
+    background: #5352ed !important;
+    transform: scale(1.1) !important;
+}
+
+/* Стили для уведомления о сервере */
+.server-note {
+    margin-top: 20px;
+    padding: 12px;
+    background: rgba(46, 213, 115, 0.1);
+    border-radius: 8px;
+    color: #2ed573;
+    text-align: center;
+    font-size: 14px;
+    border: 1px solid rgba(46, 213, 115, 0.3);
+}
+
+.server-note i {
+    margin-right: 8px;
+}
+
+/* Улучшаем отображение списка игроков */
+.player-name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.player-score {
+    font-weight: bold;
+    color: #ffa502;
+    text-shadow: 0 0 5px rgba(255, 165, 2, 0.3);
+}
+
+.player-time {
+    color: #70a1ff;
+}
